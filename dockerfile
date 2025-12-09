@@ -16,17 +16,20 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # 4. Définir le répertoire de travail
 WORKDIR /var/www/html
 
-# 5. Copier tout le code de ton projet
+# 5. Copier tout le code du projet
 COPY . .
 
 # 6. Installer les dépendances Laravel
 RUN composer install --no-dev --optimize-autoloader
 
-# 7. Générer la clé de l'application
-RUN php artisan key:generate
+# 7. Copier le fichier d'exemple .env si .env n'existe pas
+RUN if [ ! -f .env ]; then cp .env.example .env; fi
 
-# 8. Exposer le port 8000 pour Laravel
+# 8. Générer la clé de l'application uniquement si APP_KEY est vide
+RUN php artisan key:generate --force
+
+# 9. Exposer le port 8000 pour Laravel
 EXPOSE 8000
 
-# 9. Lancer Laravel
+# 10. Lancer Laravel
 CMD php artisan serve --host=0.0.0.0 --port=8000
