@@ -22,11 +22,11 @@ COPY . .
 # 6. Installer les dépendances Laravel
 RUN composer install --no-dev --optimize-autoloader
 
-# 7. Copier le fichier d'exemple .env si .env n'existe pas
-RUN if [ ! -f .env ]; then cp .env.example .env; fi
+# 7. Créer le fichier SQLite pour éviter l'erreur
+RUN touch database/database.sqlite
 
-# 8. Générer la clé de l'application uniquement si APP_KEY est vide
-RUN php artisan key:generate --force
+# 8. Générer la clé de l'application
+RUN php artisan key:generate
 
 # 9. Exposer le port 8000 pour Laravel
 EXPOSE 8000
