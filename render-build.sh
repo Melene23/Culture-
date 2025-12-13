@@ -37,3 +37,4 @@ php artisan migrate --force
 
 echo "✅ Build terminé avec succès!"
 
+
