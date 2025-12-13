@@ -52,9 +52,9 @@ class DashboardController extends Controller
             ->groupBy('statut')
             ->pluck('total','statut'); // collection [statut => total]
 
-        // Notes moyennes par contenu (titre -> avg)
+        // Notes moyennes par contenu (titre -> avg) - Compatible PostgreSQL et MySQL
         $notes = Commentaire::join('contenus', 'commentaires.id_contenu', '=', 'contenus.id_contenu')
-            ->select('contenus.titre', DB::raw('round(avg(commentaires.note)::numeric,2) as avg_note'))
+            ->select('contenus.titre', DB::raw('ROUND(AVG(commentaires.note), 2) as avg_note'))
             ->groupBy('contenus.titre')
             ->orderByDesc('avg_note')
             ->limit(10)

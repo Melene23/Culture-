@@ -15,16 +15,16 @@ return new class extends Migration
             $table->id('id_contenu');
             $table->string('titre');
             $table->foreignId('id_region');
-            $table->date('date_creation');
+            $table->date('date_creation')->default(now());
             $table->text('texte');
-            $table->string('statut');
+            $table->string('statut')->default('en attente');
             $table->foreignId('id_langue');
             $table->foreignId('id_auteur');
             
-            $table->date('date_validation');
-            $table->foreignId('id_moderateur');
-            $table->foreignId('parent_id');
-  });
+            $table->date('date_validation')->nullable();
+            $table->foreignId('id_moderateur')->nullable();
+            $table->foreignId('parent_id')->nullable();
+        });
     }
 
     /**

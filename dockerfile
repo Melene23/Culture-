@@ -1,14 +1,15 @@
 # 1. Base image PHP 8.2 avec FPM
 FROM php:8.2-fpm
 
-# 2. Installer les extensions nécessaires
+# 2. Installer les extensions nécessaires pour PostgreSQL
 RUN apt-get update && apt-get install -y \
     libonig-dev \
     libzip-dev \
+    libpq-dev \
     unzip \
     git \
     curl \
-    && docker-php-ext-install pdo_mysql mbstring zip
+    && docker-php-ext-install pdo_pgsql pgsql mbstring zip
 
 # 3. Installer Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
