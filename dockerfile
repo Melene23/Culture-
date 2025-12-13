@@ -26,11 +26,14 @@ RUN composer install --no-dev --optimize-autoloader
 # 7. Créer le fichier SQLite pour éviter l'erreur
 RUN touch database/database.sqlite
 
-# 8. Générer la clé de l'application
-RUN php artisan key:generate
+# 8. Créer le fichier .env s'il n'existe pas (copier depuis .env.example si disponible, sinon créer un fichier minimal)
+RUN if [ -f .env.example ]; then cp .env.example .env; else touch .env; fi
 
-# 9. Exposer le port 8000 pour Laravel
+# 9. Générer la clé de l'application
+RUN php artisan key:generate --force
+
+# 10. Exposer le port 8000 pour Laravel
 EXPOSE 8000
 
-# 10. Lancer Laravel
+# 11. Lancer Laravel
 CMD php artisan serve --host=0.0.0.0 --port=8000
