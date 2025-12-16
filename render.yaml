@@ -12,7 +12,7 @@ services:
         value: pgsql  # ← DOIT être pgsql, PAS sqlite
       
       - key: SESSION_DRIVER
-        value: database  # ← DOIT être database
+        value: cookie  # ← DOIT être database
       
       # ============ CONFIGURATION DE BASE ============
       - key: APP_ENV
