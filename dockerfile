@@ -20,19 +20,21 @@ WORKDIR /var/www/html
 # 5. Copier tout le code du projet
 COPY . .
 
-# 6. Installer les dépendances Laravel
+# 6. Supprimer le fichier SQLite s'il existe
+RUN rm -f database/database.sqlite
+
+# 7. Installer les dépendances Laravel
 RUN composer install --no-dev --optimize-autoloader
 
-# 7. Créer le fichier SQLite pour éviter l'erreur
-RUN touch database/database.sqlite
+# 8. Créer un .env minimal pour Docker (sans DB_CONNECTION)
+RUN echo "APP_ENV=production" > .env && \
+    echo "APP_DEBUG=false" >> .env && \
+    echo "LOG_CHANNEL=stderr" >> .env
 
-# 8. Créer le fichier .env s'il n'existe pas (copier depuis .env.example si disponible, sinon créer un fichier minimal)
-RUN if [ -f .env.example ]; then cp .env.example .env; else touch .env; fi
+# 9. Ne PAS générer la clé ici (Render le fera)
+# php artisan key:generate --force
 
-# 9. Générer la clé de l'application
-RUN php artisan key:generate --force
-
-# 10. Exposer le port 8000 pour Laravel
+# 10. Exposer le port
 EXPOSE 8000
 
 # 11. Lancer Laravel
