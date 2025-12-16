@@ -47,13 +47,13 @@ services:
       - key: CACHE_DRIVER
         value: file
       - key: SESSION_DRIVER
-        value: database
-      - key: QUEUE_CONNECTION
-        value: sync
+        value: database  # ← CHANGÉ de 'file' à 'database'
       - key: SESSION_LIFETIME
         value: "120"
       - key: SESSION_ENCRYPT
         value: "false"
+      - key: QUEUE_CONNECTION
+        value: sync
 
 databases:
   - name: culture-benin-db
@@ -61,4 +61,3 @@ databases:
     user: culture_user
     plan: starter
     region: frankfurt
-
