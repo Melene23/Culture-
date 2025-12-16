@@ -7,14 +7,14 @@ services:
     buildCommand: ./render-build.sh
     startCommand: php artisan serve --host=0.0.0.0 --port=$PORT
     envVars:
-      # ESSENTIEL : Ces deux lignes DOIVENT être présentes
+      # ============ ESSENTIEL ============
       - key: DB_CONNECTION
-        value: pgsql
+        value: pgsql  # ← DOIT être pgsql, PAS sqlite
       
       - key: SESSION_DRIVER
-        value: database
+        value: database  # ← DOIT être database
       
-      # Le reste de votre configuration
+      # ============ CONFIGURATION DE BASE ============
       - key: APP_ENV
         value: production
       
@@ -27,6 +27,7 @@ services:
       - key: LOG_LEVEL
         value: error
       
+      # ============ POSTGRESQL (Render Database) ============
       - key: DB_HOST
         fromDatabase:
           name: culture-benin-db
@@ -52,6 +53,7 @@ services:
           name: culture-benin-db
           property: password
       
+      # ============ APPLICATION ============
       - key: APP_KEY
         generateValue: true
       
@@ -66,6 +68,13 @@ services:
       
       - key: QUEUE_CONNECTION
         value: sync
+      
+      # ============ SESSIONS (optionnel mais recommandé) ============
+      - key: SESSION_LIFETIME
+        value: "120"
+      
+      - key: SESSION_ENCRYPT
+        value: "false"
 
 databases:
   - name: culture-benin-db
