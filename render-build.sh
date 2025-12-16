@@ -1,45 +1,35 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Build final avec sessions database..."
+echo "🚀 Build Render - PostgreSQL"
 
 # NETTOYAGE
 echo "🧹 Nettoyage..."
 rm -f bootstrap/cache/*.php
+rm -f database/database.sqlite 2>/dev/null || true
 
 # DÉPENDANCES
+echo "📦 PHP..."
 composer install --no-dev --optimize-autoloader --no-interaction
+
+echo "📦 Node..."
 npm ci --production
 npm run build
 
 # CONFIGURATION
+echo "🔑 Clé..."
 php artisan key:generate --force
 
-# MIGRATIONS SESSIONS (CRITIQUE)
-echo "🗃️  Préparation sessions..."
-if [ ! -f "database/migrations/*create_sessions_table.php" ]; then
-    php artisan session:table
-fi
-
-echo "🗄️  Migration..."
+echo "🗃️  Sessions..."
+php artisan session:table
 php artisan migrate --force
 
-# CACHE
+echo "⚡ Cache..."
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-# VÉRIFICATION
-echo "🔍 Vérification PostgreSQL et sessions..."
-php artisan tinker --execute="
-try {
-    echo '📊 Database: ' . \DB::connection()->getDatabaseName() . PHP_EOL;
-    echo '🔌 Driver: ' . \DB::connection()->getDriverName() . PHP_EOL;
-    echo '📋 Sessions table: ' . (\Schema::hasTable('sessions') ? '✅ OUI' : '❌ NON') . PHP_EOL;
-} catch(\Exception \$e) {
-    echo '❌ Erreur: ' . \$e->getMessage() . PHP_EOL;
-}
-" 2>/dev/null || true
-
+echo "📁 Stockage..."
 php artisan storage:link
-echo "🎉 Terminé !"
+
+echo "✅ Terminé !"
