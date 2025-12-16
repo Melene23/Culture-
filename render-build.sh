@@ -4,43 +4,33 @@ set -e
 echo "🚀 Démarrage du build pour Render..."
 
 # ============================================
-# ÉTAPE CRITIQUE : Configuration de l'environnement
+# ÉTAPE 1: NETTOYAGE COMPLET
 # ============================================
 
-echo "🔧 Configuration de l'environnement..."
-
-# Supprimer tout fichier .env existant (s'il a été commit par erreur)
-if [ -f ".env" ]; then
-    echo "🗑️  Suppression du .env existant..."
-    rm .env
-fi
-
-# Vérifier les variables PostgreSQL
-echo "📊 Vérification des variables PostgreSQL..."
-echo "DB_CONNECTION=${DB_CONNECTION:-non défini}"
-echo "DB_HOST=${DB_HOST:-non défini}"
-echo "SESSION_DRIVER=${SESSION_DRIVER:-non défini}"
-
-# Forcer PostgreSQL si ce n'est pas défini
-if [ -z "$DB_CONNECTION" ] || [ "$DB_CONNECTION" = "sqlite" ]; then
-    echo "⚠️  DB_CONNECTION est sqlite ou non défini, forçage à pgsql..."
-    export DB_CONNECTION=pgsql
-fi
-
-if [ -z "$SESSION_DRIVER" ] || [ "$SESSION_DRIVER" = "file" ]; then
-    echo "⚠️  SESSION_DRIVER est file ou non défini, forçage à database..."
-    export SESSION_DRIVER=database
-fi
-
-# Nettoyer TOUS les caches
 echo "🧹 Nettoyage complet des caches..."
+rm -f bootstrap/cache/*.php
 php artisan config:clear || true
 php artisan cache:clear || true
 php artisan route:clear || true
 php artisan view:clear || true
 
+# Supprimer tout .env existant
+if [ -f ".env" ]; then
+    echo "🗑️  Suppression du .env local..."
+    rm .env
+fi
+
 # ============================================
-# Installation des dépendances
+# ÉTAPE 2: AFFICHER LES VARIABLES (debug)
+# ============================================
+
+echo "🔍 Variables d'environnement Render:"
+echo "DB_CONNECTION=${DB_CONNECTION}"
+echo "SESSION_DRIVER=${SESSION_DRIVER}"
+echo "DB_HOST=${DB_HOST}"
+
+# ============================================
+# ÉTAPE 3: INSTALLATION
 # ============================================
 
 echo "📦 Installation des dépendances Composer..."
@@ -53,44 +43,64 @@ echo "🔨 Construction des assets..."
 npm run build
 
 # ============================================
-# Configuration Laravel
+# ÉTAPE 4: CONFIGURATION LARAVEL
 # ============================================
 
-echo "🔑 Génération FORCÉE de la clé d'application..."
+echo "🔑 Génération de la clé d'application..."
 php artisan key:generate --force
 
-echo "🗃️  Création de la migration sessions..."
-php artisan session:table
+echo "🗃️  Préparation de la table sessions..."
+# Vérifier si la migration sessions existe déjà
+if ! ls database/migrations/*create_sessions_table.php 2>/dev/null; then
+    echo "📋 Création de la migration sessions..."
+    php artisan session:table
+fi
 
-echo "🗄️  Exécution des migrations (POSTGRESQL)..."
+echo "🗄️  Exécution des migrations..."
 php artisan migrate --force
 
-echo "⚡ Optimisation de Laravel..."
+echo "⚡ Optimisation..."
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
 # ============================================
-# Vérifications
+# ÉTAPE 5: VÉRIFICATIONS
 # ============================================
 
-echo "🔍 Vérification finale..."
+echo "✅ Vérifications finales..."
 
-# Vérifier la connexion PostgreSQL
-if php artisan tinker --execute="try { \$db = \DB::connection()->getPdo(); echo '✅ PostgreSQL connecté: ' . \DB::connection()->getDatabaseName(); } catch(\Exception \$e) { echo '❌ Erreur PostgreSQL: ' . \$e->getMessage(); }" 2>/dev/null; then
-    echo "✅ PostgreSQL vérifié"
-else
-    echo "⚠️  Problème avec PostgreSQL"
-fi
+# Test PostgreSQL
+echo "🔌 Test de connexion PostgreSQL..."
+php artisan tinker --execute="
+try {
+    \$pdo = DB::connection()->getPdo();
+    echo '✅ Connecté à PostgreSQL: ' . DB::connection()->getDatabaseName() . PHP_EOL;
+    echo '📊 Driver: ' . DB::connection()->getDriverName() . PHP_EOL;
+} catch (\Exception \$e) {
+    echo '❌ ERREUR PostgreSQL: ' . \$e->getMessage() . PHP_EOL;
+}
+" 2>/dev/null || echo "⚠️  Tinker non disponible"
 
-# Vérifier la table sessions
-if php artisan tinker --execute="echo \Schema::hasTable('sessions') ? '✅ Table sessions existante' : '❌ Table sessions manquante';" 2>/dev/null; then
-    echo "✅ Table sessions vérifiée"
-else
-    echo "⚠️  Impossible de vérifier sessions"
-fi
+# Test sessions table
+echo "📋 Vérification table sessions..."
+php artisan tinker --execute="
+if (Schema::hasTable('sessions')) {
+    echo '✅ Table sessions existe' . PHP_EOL;
+    echo '📈 Nombre de sessions: ' . DB::table('sessions')->count() . PHP_EOL;
+} else {
+    echo '❌ Table sessions manquante!' . PHP_EOL;
+}
+" 2>/dev/null || echo "⚠️  Tinker non disponible"
+
+# ============================================
+# ÉTAPE 6: FINALISATION
+# ============================================
 
 echo "📁 Création du lien de stockage..."
 php artisan storage:link
 
-echo "✅ Build terminé avec succès!"
+echo "🔐 Configuration des permissions..."
+chmod -R 775 storage bootstrap/cache
+
+echo "🎉 Build terminé avec succès!"
