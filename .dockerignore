@@ -1,0 +1,15 @@
+# Fichiers à exclure du build Docker
+.git
+.gitignore
+node_modules
+vendor
+storage/logs
+storage/framework/cache
+storage/framework/sessions
+storage/framework/views
+.env
+.env.local
+.env.production.local
+npm-debug.log*
+yarn-error.log*
+
