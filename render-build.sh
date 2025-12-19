@@ -12,19 +12,20 @@ rm -f database/database.sqlite 2>/dev/null || true
 echo "📦 PHP..."
 composer install --no-dev --optimize-autoloader --no-interaction
 
-echo "📦 Node..."
-npm ci --production
+# Installer les dépendances NPM
+echo "📦 Installation des dépendances NPM..."
+npm ci --omit=optional
+
+# Construire les assets
+echo "🔨 Construction des assets..."
 npm run build
 
-# CONFIGURATION
-echo "🔑 Clé..."
-php artisan key:generate --force
-
-echo "🗃️  Sessions..."
-php artisan session:table
+# Exécuter les migrations
+echo "�️ Exécution des migrations..."
 php artisan migrate --force
 
-echo "⚡ Cache..."
+# Optimiser Laravel
+echo "⚡ Optimisation de Laravel..."
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache

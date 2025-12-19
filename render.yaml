@@ -1,17 +1,18 @@
 services:
   - type: web
     name: culture-benin
-    env: docker
+    env: php
     region: frankfurt
     plan: starter
-    dockerfilePath: ./Dockerfile
+    buildCommand: ./render-build.sh
+    startCommand: php artisan serve --host=0.0.0.0 --port=$PORT
     envVars:
       # ============ ESSENTIEL ============
       - key: DB_CONNECTION
         value: pgsql  # ← DOIT être pgsql, PAS sqlite
       
       - key: SESSION_DRIVER
-        value: cookie  # ← DOIT être database
+        value: database  # ← DOIT être database
       
       # ============ CONFIGURATION DE BASE ============
       - key: APP_ENV
@@ -57,11 +58,7 @@ services:
         generateValue: true
       
       - key: APP_URL
-        fromService:
-          type: web
-          name: culture-benin
-          property: host
-      
+        value: https://$RENDER_EXTERNAL_HOSTNAME
       - key: CACHE_DRIVER
         value: file
       

@@ -42,7 +42,7 @@ COPY --from=assets /app/public/build ./public/build
 # Droits pour Laravel
 RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Exposer le port attendu par Render (le service injecte $PORT pour Apache)
+# Exposer le port HTTP
 EXPOSE 80
 
 CMD ["apache2-foreground"]
