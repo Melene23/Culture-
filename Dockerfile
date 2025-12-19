@@ -13,7 +13,7 @@ RUN composer install --no-dev --prefer-dist --no-progress --no-interaction
 FROM node:20 AS assets
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 COPY . .
 RUN npm run build
 
