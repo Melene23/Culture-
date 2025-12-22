@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         // Vérifier si la colonne n'existe pas déjà
-        if (!Schema::hasColumn('contenu', 'id_type_contenu')) {
-            Schema::table('contenu', function (Blueprint $table) {
+        if (!Schema::hasColumn('contenus', 'id_type_contenu')) {
+            Schema::table('contenus', function (Blueprint $table) {
                 $table->foreignId('id_type_contenu')->after('id_langue');
             });
         }
@@ -24,7 +24,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('contenu', function (Blueprint $table) {
+        Schema::table('contenus', function (Blueprint $table) {
             $table->dropForeign(['id_type_contenu']);
             $table->dropColumn('id_type_contenu');
         });

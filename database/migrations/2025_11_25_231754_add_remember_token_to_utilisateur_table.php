@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('utilisateur', function (Blueprint $table) {
+        Schema::table('utilisateurs', function (Blueprint $table) {
             // Vérifier si la colonne n'existe pas déjà
-            if (!Schema::hasColumn('utilisateur', 'remember_token')) {
+            if (!Schema::hasColumn('utilisateurs', 'remember_token')) {
                 $table->rememberToken()->after('mot_de_passe');
             }
         });
@@ -24,7 +24,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-         Schema::table('utilisateur', function (Blueprint $table) {
+         Schema::table('utilisateurs', function (Blueprint $table) {
             $table->dropRememberToken();
         });
     }

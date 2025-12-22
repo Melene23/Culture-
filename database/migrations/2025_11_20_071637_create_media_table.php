@@ -11,14 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('media', function (Blueprint $table) {
-            $table->id('id_media');
-            $table->string('id_type_media');
-            $table->text('description');
-            $table->string('chemin');
-            $table->foreignId('id_contenu');
-            $table->string('fichier');
-        });
+        // No-op: la table est créée dans une autre migration (create_medias_table)
     }
 
     /**
@@ -26,6 +19,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('media');
+        // No-op
     }
 };

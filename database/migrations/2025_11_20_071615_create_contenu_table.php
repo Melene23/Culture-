@@ -11,20 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('contenu', function (Blueprint $table) {
-            $table->id('id_contenu');
-            $table->string('titre');
-            $table->foreignId('id_region');
-            $table->date('date_creation')->default(now());
-            $table->text('texte');
-            $table->string('statut')->default('en attente');
-            $table->foreignId('id_langue');
-            $table->foreignId('id_auteur');
-            
-            $table->date('date_validation')->nullable();
-            $table->foreignId('id_moderateur')->nullable();
-            $table->foreignId('parent_id')->nullable();
-        });
+        // No-op: la table est créée dans une autre migration (create_contenus_table)
     }
 
     /**
@@ -32,6 +19,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('contenu');
+        // No-op
     }
 };

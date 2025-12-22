@@ -11,15 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('commentaire', function (Blueprint $table) {
-            $table->id('id_commentaire');
-          
-            $table->date('date');
-            $table->foreignId('id_utilisateur');
-            $table->foreignId('id_contenu');
-            $table->text('texte');
-            $table->integer('note');
-        });
+        // No-op: la table est créée dans une autre migration (create_commentaires_table)
     }
 
     /**
@@ -27,6 +19,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('commentaire');
+        // No-op
     }
 };

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('contenu', function (Blueprint $table) {
+        Schema::table('contenus', function (Blueprint $table) {
             // Rendre les champs optionnels nullable
             $table->date('date_validation')->nullable()->change();
             $table->foreignId('id_moderateur')->nullable()->change();
@@ -24,7 +24,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('contenu', function (Blueprint $table) {
+        Schema::table('contenus', function (Blueprint $table) {
             // Remettre les champs comme non-nullable (attention: peut causer des erreurs si des données null existent)
             $table->date('date_validation')->nullable(false)->change();
             $table->foreignId('id_moderateur')->nullable(false)->change();
