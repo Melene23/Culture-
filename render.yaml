@@ -58,8 +58,10 @@ services:
       
       - key: APP_URL
         value: https://$RENDER_EXTERNAL_HOSTNAME
-      - key: CACHE_DRIVER
+      - key: CACHE_STORE
         value: file
+      - key: FILESYSTEM_DISK
+        value: public
       
       - key: QUEUE_CONNECTION
         value: sync
