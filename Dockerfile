@@ -4,7 +4,7 @@
 FROM composer:2 AS vendor
 WORKDIR /app
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --prefer-dist --no-progress --no-interaction
+RUN composer install --no-dev --prefer-dist --no-progress --no-interaction --no-scripts
 COPY . .
 # Ré-exécuter pour installer les providers après copie complète (sans scripts interactifs)
 RUN composer install --no-dev --prefer-dist --no-progress --no-interaction
