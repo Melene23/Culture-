@@ -42,23 +42,21 @@ class AuthController extends Controller
         // Vérifier le mot de passe (support pour Bcrypt et texte clair pour migration)
         $passwordValid = false;
         $needsRehash = false;
-        
-        // Essayer d'abord avec Hash::check() pour les mots de passe Bcrypt
-        try {
-            if (Hash::check($request->password, $user->mot_de_passe)) {
-                $passwordValid = true;
-                // Vérifier si le hash doit être mis à jour
-                if (Hash::needsRehash($user->mot_de_passe)) {
-                    $needsRehash = true;
-                }
+
+        $plainPassword = (string) $request->password;
+        $storedPassword = (string) $user->mot_de_passe;
+
+        if ($storedPassword !== '' && Hash::check($plainPassword, $storedPassword)) {
+            $passwordValid = true;
+            if (Hash::needsRehash($storedPassword)) {
+                $needsRehash = true;
             }
-        } catch (\Exception $e) {
-            // Si Hash::check() échoue (format non Bcrypt), essayer comparaison directe
-            // pour permettre la migration des anciens mots de passe
-            if ($user->mot_de_passe === $request->password) {
-                $passwordValid = true;
-                $needsRehash = true; // Forcer le rehash car c'est en texte clair
-            }
+        } elseif ($storedPassword !== '' && hash_equals($storedPassword, $plainPassword)) {
+            $passwordValid = true;
+            $needsRehash = true;
+        } elseif ($storedPassword !== '' && hash_equals($storedPassword, md5($plainPassword))) {
+            $passwordValid = true;
+            $needsRehash = true;
         }
         
         if (!$passwordValid) {
