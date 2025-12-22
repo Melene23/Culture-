@@ -101,7 +101,7 @@ class AuthController extends Controller
             return redirect()->route('admin.dashboard')
                 ->with('success', 'Bienvenue Administrateur ' . $user->prenom . ' !');
         } else {
-            return redirect()->route('dashboard')
+            return redirect()->route('home')
                 ->with('success', 'Bienvenue ' . $user->prenom . ' ! Connecté avec succès.');
         }
     }
