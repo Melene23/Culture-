@@ -10,8 +10,26 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up()
-{
-    Schema::create('contenus', function (Blueprint $table) {
+    {
+        $renames = [
+            'region' => 'regions',
+            'langue' => 'langues',
+            'utilisateur' => 'utilisateurs',
+            '_type_contenue' => 'type_contenus',
+            '_type_media' => 'type_medias',
+        ];
+
+        foreach ($renames as $from => $to) {
+            if (Schema::hasTable($from) && !Schema::hasTable($to)) {
+                Schema::rename($from, $to);
+            }
+        }
+
+        if (Schema::hasTable('contenus')) {
+            return;
+        }
+
+        Schema::create('contenus', function (Blueprint $table) {
         $table->id('id_contenu');
         $table->string('titre');
         $table->longText('texte');
@@ -36,7 +54,7 @@ return new class extends Migration
 
         $table->timestamps();
     });
-}
+    }
 
 
     /**
