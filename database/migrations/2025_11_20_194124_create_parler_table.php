@@ -10,17 +10,21 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up()
-{
-    Schema::create('parler', function (Blueprint $table) {
-        $table->unsignedBigInteger('id_region');
-        $table->unsignedBigInteger('id_langue');
+    {
+        if (Schema::hasTable('parler')) {
+            return;
+        }
 
-        $table->foreign('id_region')->references('id_region')->on('regions')->onDelete('cascade');
-        $table->foreign('id_langue')->references('id_langue')->on('langues')->onDelete('cascade');
+        Schema::create('parler', function (Blueprint $table) {
+            $table->unsignedBigInteger('id_region');
+            $table->unsignedBigInteger('id_langue');
 
-        $table->primary(['id_region', 'id_langue']);
-    });
-}
+            $table->foreign('id_region')->references('id_region')->on('regions')->onDelete('cascade');
+            $table->foreign('id_langue')->references('id_langue')->on('langues')->onDelete('cascade');
+
+            $table->primary(['id_region', 'id_langue']);
+        });
+    }
 
     /**
      * Reverse the migrations.
