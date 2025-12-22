@@ -93,7 +93,7 @@ class FedaPayService
             'currency' => ['iso' => 'XOF'],
             'description' => $description,
             'callback_url' => $callbackUrl,
-            'callback_url' => $cancelUrl ?? $callbackUrl,
+            'cancel_url' => $cancelUrl ?? $callbackUrl,
         ];
         
         // Ajouter les informations client si fournies
