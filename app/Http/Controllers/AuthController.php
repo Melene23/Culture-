@@ -180,7 +180,7 @@ class AuthController extends Controller
         $data = $request->validate([
             'nom' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:utilisateur,email',
+            'email' => 'required|string|email|max:255|unique:utilisateurs,email',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
