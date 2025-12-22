@@ -62,6 +62,9 @@ services:
         value: file
       - key: FILESYSTEM_DISK
         value: public
+
+      - key: VIEW_COMPILED_PATH
+        value: /var/www/html/storage/framework/views
       
       - key: QUEUE_CONNECTION
         value: sync

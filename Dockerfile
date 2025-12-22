@@ -40,6 +40,9 @@ COPY . .
 COPY --from=vendor /app/vendor ./vendor
 COPY --from=assets /app/public/build ./public/build
 
+# Préparer les dossiers nécessaires à Laravel (Blade cache, sessions, etc.)
+RUN mkdir -p storage/framework/views storage/framework/cache storage/framework/sessions
+
 # Droits pour Laravel
 RUN chown -R www-data:www-data storage bootstrap/cache
 
