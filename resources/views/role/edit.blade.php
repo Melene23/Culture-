@@ -236,12 +236,12 @@
             </div>
           @endif
 
-          <form action="{{ route('role.update', $role->id_role) }}" method="POST">
+          <form action="{{ route('role.update', $role->id) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="mb-3">
-              <label for="nom_role" class="form-label">Nom</label>
-              <input type="text" name="nom_role" id="nom_role" value="{{ old('nom_role', $role->nom_role) }}" class="form-control" required>
+              <label for="nom" class="form-label">Nom</label>
+              <input type="text" name="nom" id="nom" value="{{ old('nom', $role->nom) }}" class="form-control" required>
             </div>
 
             <div class="d-flex justify-content-end">

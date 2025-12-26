@@ -245,11 +245,11 @@
             @forelse($roles as $role)
               <tr>
                 
-                <td>{{ $role->nom_role }}</td>
+                <td>{{ $role->nom }}</td>
                 <td>
-                  <a href="{{ route('role.show', $role->id_role) }}" class="btn btn-sm btn-info" title="Voir" aria-label="Voir"><i class="bi bi-eye"></i></a>
-                  <a href="{{ route('role.edit', $role->id_role) }}" class="btn btn-sm btn-warning" title="Éditer" aria-label="Éditer"><i class="bi bi-pencil"></i></a>
-                  <form action="{{ route('role.destroy', $role->id_role) }}" method="POST" class="d-inline" onsubmit="return confirm('Supprimer ?');">
+                  <a href="{{ route('role.show', $role->id) }}" class="btn btn-sm btn-info" title="Voir" aria-label="Voir"><i class="bi bi-eye"></i></a>
+                  <a href="{{ route('role.edit', $role->id) }}" class="btn btn-sm btn-warning" title="Éditer" aria-label="Éditer"><i class="bi bi-pencil"></i></a>
+                  <form action="{{ route('role.destroy', $role->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Supprimer ?');">
                     @csrf
                     @method('DELETE')
                     <button class="btn btn-sm btn-danger" title="Supprimer" aria-label="Supprimer"><i class="bi bi-trash"></i></button>

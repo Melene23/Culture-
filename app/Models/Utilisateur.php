@@ -50,7 +50,7 @@ class Utilisateur extends Authenticatable
     // Relation avec le rôle
     public function role()
     {
-        return $this->belongsTo(Role::class, 'id_role', 'id_role');
+        return $this->belongsTo(Role::class, 'id_role', 'id');
     }
     
     // Relation avec les contenus

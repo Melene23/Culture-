@@ -228,15 +228,15 @@
         <div class="card-body">
           <dl class="row">
             <dt class="col-sm-4">ID</dt>
-            <dd class="col-sm-8">{{ $role->id_role ?? '-' }}</dd>
+            <dd class="col-sm-8">{{ $role->id ?? '-' }}</dd>
 
             <dt class="col-sm-4">Nom</dt>
-            <dd class="col-sm-8">{{ $role->nom_role ?? '-' }}</dd>
+            <dd class="col-sm-8">{{ $role->nom ?? '-' }}</dd>
           </dl>
 
           <div class="d-flex justify-content-end">
             <a href="{{ route('role.index') }}" class="btn btn-secondary">Retour</a>
-            <a href="{{ route('role.edit', $role->id_role) }}" class="btn btn-primary ms-2">Éditer</a>
+            <a href="{{ route('role.edit', $role->id) }}" class="btn btn-primary ms-2">Éditer</a>
           </div>
         </div>
       </div>

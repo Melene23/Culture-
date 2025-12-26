@@ -16,34 +16,35 @@ class RoleSeeder extends Seeder
         // Définir les rôles du système avec leurs descriptions
         $roles = [
             [
-                'nom_role' => 'Admin',
+                'id' => 1,
+                'nom' => 'Admin',
                 'description' => 'Administrateur avec accès complet au système et gestion de tous les utilisateurs'
             ],
             [
-                'nom_role' => 'Auteur',
+                'id' => 2,
+                'nom' => 'Auteur',
                 'description' => 'Auteur pouvant créer, modifier et publier ses propres contenus culturels'
             ],
             [
-                'nom_role' => 'Utilisateur',
+                'id' => 3,
+                'nom' => 'Utilisateur',
                 'description' => 'Utilisateur standard pouvant consulter les contenus et créer des commentaires'
             ],
             [
-                'nom_role' => 'Modérateur',
+                'id' => 4,
+                'nom' => 'Modérateur',
                 'description' => 'Modérateur pouvant valider, modérer et gérer les contenus de tous les utilisateurs'
             ],
         ];
         
         // Créer ou mettre à jour les rôles
         foreach ($roles as $roleData) {
-            $role = Role::where('nom_role', $roleData['nom_role'])
-                       ->orWhere('nom_role', strtolower($roleData['nom_role']))
-                       ->orWhere('nom_role', ucfirst(strtolower($roleData['nom_role'])))
-                       ->first();
+            $role = Role::find($roleData['id']);
             
             if ($role) {
                 // Mettre à jour le rôle existant
                 $role->update([
-                    'nom_role' => $roleData['nom_role'],
+                    'nom' => $roleData['nom'],
                     'description' => $roleData['description']
                 ]);
             } else {

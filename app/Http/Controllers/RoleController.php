@@ -12,7 +12,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::orderBy('id_role','desc')->get();
+        $roles = Role::orderBy('id','desc')->get();
         return view('role.index', compact('roles'));
     }
 
@@ -30,7 +30,7 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'nom_role' => 'required|string|max:255',
+            'nom' => 'required|string|max:255',
         ]);
 
         Role::create($data);
@@ -64,7 +64,7 @@ class RoleController extends Controller
         $role = Role::findOrFail($id);
 
         $data = $request->validate([
-            'nom_role' => 'required|string|max:255',
+            'nom' => 'required|string|max:255',
         ]);
 
         $role->update($data);

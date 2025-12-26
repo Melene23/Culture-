@@ -34,12 +34,12 @@
             @csrf
 
             <div class="mb-4">
-                <label for="nom_role" class="form-label">
+                <label for="nom" class="form-label">
                     <i class="bi bi-tag me-1"></i>Nom du rôle <span class="text-danger">*</span>
                 </label>
-                <input type="text" name="nom_role" id="nom_role" value="{{ old('nom_role') }}" 
+                <input type="text" name="nom" id="nom" value="{{ old('nom') }}" 
                        class="form-control form-control-modern" placeholder="Ex: Administrateur, Modérateur" required>
-                @error('nom_role')
+                @error('nom')
                     <small class="text-danger">{{ $message }}</small>
                 @enderror
             </div>
