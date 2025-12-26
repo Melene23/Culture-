@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             RegionSeeder::class,
             TypeContenuSeeder::class,
             TypeMediaSeeder::class,
+            UtilisateurSeeder::class,
         ]);
     }
 }
