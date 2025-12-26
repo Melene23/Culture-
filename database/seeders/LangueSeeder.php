@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Langue;
 
 class LangueSeeder extends Seeder
 {
@@ -12,8 +13,17 @@ class LangueSeeder extends Seeder
      */
     public function run(): void
     {
-        langue::create(['nom_langue'=>'Français']);
-        langue::create(['nom_langue'=>'Anglais']);
-        langue::create(['nom_langue'=>'Espagnol']);
+        Langue::firstOrCreate(
+            ['code_langue' => 'fr'],
+            ['nom_langue' => 'Français', 'description' => 'Langue française']
+        );
+        Langue::firstOrCreate(
+            ['code_langue' => 'en'],
+            ['nom_langue' => 'Anglais', 'description' => 'Langue anglaise']
+        );
+        Langue::firstOrCreate(
+            ['code_langue' => 'es'],
+            ['nom_langue' => 'Espagnol', 'description' => 'Langue espagnole']
+        );
     }
 }

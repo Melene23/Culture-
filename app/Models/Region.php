@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Region extends Model
 {
     // Nom de la table (corrigé pour enlever l'espace final)
-    protected $table = 'region';
+    protected $table = 'regions';
     protected $primaryKey = 'id_region';
 
     public $timestamps = false;
