@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Auth;
 
 class CommentaireController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->only(['create', 'store', 'edit', 'update', 'destroy']);
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -17,13 +22,6 @@ class CommentaireController extends Controller
         $commentaires = Commentaire::orderBy('id_commentaire', 'desc')->get();
         return view('commentaire.index', compact('commentaires'));
     }
-
-    // SUPPRIMER TOUT LE CONSTRUCTEUR - C'EST LA CAUSE DE L'ERREUR
-    // public function __construct()
-    // {
-    //     // Restreindre la création/modification/suppression aux utilisateurs authentifiés
-    //     $this->middleware('auth')->only(['create', 'store', 'edit', 'update', 'destroy']);
-    // }
 
     /**
      * Show the form for creating a new resource.
@@ -47,7 +45,7 @@ class CommentaireController extends Controller
         ]);
 
         // Assigner l'utilisateur connecté comme auteur
-        $data['id_utilisateur'] = Auth::id();
+        $data['id_utilisateur'] = Auth::user()->id_utilisateur;
 
         // valeur par défaut
         $data['note'] = $data['note'] ?? 0;

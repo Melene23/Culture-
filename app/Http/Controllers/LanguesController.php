@@ -5,14 +5,19 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Langue;
 
-class languescontroller extends Controller
+class LanguesController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->only(['create', 'store', 'edit', 'update', 'destroy']);
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $langues = langue::orderBy('id_langue', 'desc')->get();
+        $langues = Langue::orderBy('id_langue', 'desc')->get();
         return view('langues.index', compact('langues'));
     }
 

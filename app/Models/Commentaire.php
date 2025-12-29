@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class commentaire extends Model
+class Commentaire extends Model
 {
-        protected $table = 'commentaire';
+    protected $table = 'commentaires';
     protected $primaryKey = 'id_commentaire';
 
-    public $timestamps = false;
+    public $timestamps = true;
     protected $fillable = [
         'id_commentaire',
         'date',

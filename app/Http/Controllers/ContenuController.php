@@ -9,9 +9,15 @@ use App\Models\Utilisateur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
+use App\Models\Media;
 
 class ContenuController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->only(['create', 'store', 'edit', 'update', 'destroy', 'mesContenus']);
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -132,7 +138,7 @@ public function create()
             $typeMediaId = $typeMedia ? $typeMedia->id_type_media : 1;
             
             // Créer l'entrée média
-            \App\Models\media::create([
+            Media::create([
                 'chemin' => 'storage/' . $path,
                 'id_contenu' => $contenu->id_contenu,
                 'id_type_media' => $typeMediaId,
@@ -148,7 +154,7 @@ public function create()
      */
     public function show(string $id)
     {
-        $contenu = Contenu::with(['region', 'langue', 'auteur', 'media'])->findOrFail($id);
+        $contenu = Contenu::with(['region', 'langue', 'auteur', 'medias'])->findOrFail($id);
         return view('contenu.show', compact('contenu'));
     }
 

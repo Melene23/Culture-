@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Contenu;
-use App\Models\media as Media;
+use App\Models\Media;
 use App\Models\Utilisateur;
-use App\Models\commentaire as Commentaire;
+use App\Models\Commentaire;
 
 class Homecontroller extends Controller
 {

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Contenu extends Model
 {
-    protected $table = 'contenu';
+    protected $table = 'contenus';
     protected $primaryKey = 'id_contenu';
     public $timestamps = false;
 
@@ -45,8 +45,8 @@ class Contenu extends Model
     }
     
     // Relation avec les médias
-    public function media()
+    public function medias()
     {
-        return $this->hasMany(\App\Models\media::class, 'id_contenu', 'id_contenu');
+        return $this->hasMany(\App\Models\Media::class, 'id_contenu', 'id_contenu');
     }
 }

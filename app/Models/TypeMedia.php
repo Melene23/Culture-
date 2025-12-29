@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TypeMedia extends Model
 {
-    protected $table = '_type_media';
+    protected $table = 'type_medias';
     protected $primaryKey = 'id_type_media';
  public $timestamps = false;
 

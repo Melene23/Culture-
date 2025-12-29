@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TypeContenu extends Model
 {
-    protected $table = '_type_contenue';
+    protected $table = 'type_contenus';
     protected $primaryKey = 'id_type_contenu';
  public $timestamps = false;
 

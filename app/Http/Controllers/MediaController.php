@@ -3,17 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\media;
+use App\Models\Media;
 use Illuminate\Support\Facades\Storage;
 
 class MediaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->only(['create', 'store', 'edit', 'update', 'destroy']);
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $medias = media::with('typeMedia')->orderBy('id_media', 'desc')->get();
+        $medias = Media::with('typeMedia')->orderBy('id_media', 'desc')->get();
         return view('media.index', compact('medias'));
     }
 
@@ -44,7 +49,7 @@ class MediaController extends Controller
             $data['chemin'] = 'storage/' . $path;
         }
 
-        media::create($data);
+        Media::create($data);
 
         return redirect()->route('media.index')->with('success', 'Média ajouté.');
     }
@@ -54,7 +59,7 @@ class MediaController extends Controller
      */
     public function show(string $id)
     {
-        $media = media::findOrFail($id);
+        $media = Media::findOrFail($id);
         return view('media.show', compact('media'));
     }
 
@@ -63,7 +68,7 @@ class MediaController extends Controller
      */
     public function edit(string $id)
     {
-        $media = media::findOrFail($id);
+        $media = Media::findOrFail($id);
         return view('media.edit', compact('media'));
     }
 
@@ -72,7 +77,7 @@ class MediaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $media = media::findOrFail($id);
+        $media = Media::findOrFail($id);
 
         $data = $request->validate([
             'chemin' => 'nullable|file|max:10240',
@@ -104,7 +109,7 @@ class MediaController extends Controller
      */
     public function destroy(string $id)
     {
-        $media = media::findOrFail($id);
+        $media = Media::findOrFail($id);
         if (!empty($media->chemin)) {
             $old = preg_replace('#^storage/#', '', $media->chemin);
             if (Storage::disk('public')->exists($old)) {
