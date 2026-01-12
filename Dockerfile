@@ -23,7 +23,7 @@ WORKDIR /var/www/html
 
 # Paquets système + extensions PHP nécessaires (PostgreSQL, Zip, GD)
 RUN apt-get update \
-  && apt-get install -y git unzip libzip-dev libpng-dev libpq-dev libonig-dev \
+  && apt-get install -y git unzip libzip-dev libpng-dev libpq-dev libonig-dev postgresql-client \
   && docker-php-ext-install pdo_pgsql zip gd \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
@@ -40,6 +40,10 @@ COPY . .
 COPY --from=vendor /app/vendor ./vendor
 COPY --from=assets /app/public/build ./public/build
 
+# Copier le script d'entrée
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 # Préparer les dossiers nécessaires à Laravel (Blade cache, sessions, etc.)
 RUN mkdir -p storage/framework/views storage/framework/cache storage/framework/sessions
 
@@ -48,5 +52,8 @@ RUN chown -R www-data:www-data storage bootstrap/cache
 
 # Exposer le port HTTP
 EXPOSE 80
+
+# Utiliser le script d'entrée
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 CMD ["bash", "-lc", "sed -i \"s/Listen 80/Listen ${PORT:-80}/\" /etc/apache2/ports.conf && sed -i \"s/<VirtualHost \\*:80>/<VirtualHost *:${PORT:-80}>/\" /etc/apache2/sites-available/000-default.conf && php artisan migrate --force && php artisan db:seed --force && php artisan config:clear && php artisan route:clear && php artisan view:clear && apache2-foreground"]

@@ -5,7 +5,7 @@ services:
     region: frankfurt
     plan: starter
     dockerfilePath: ./Dockerfile
-    buildCommand: "php artisan migrate --force && php artisan storage:link && php artisan config:cache && php artisan route:cache && php artisan view:cache"
+    buildCommand: "php artisan storage:link && php artisan config:cache && php artisan route:cache && php artisan view:cache"
     envVars:
       # ============ ESSENTIEL ============
       - key: DB_CONNECTION
