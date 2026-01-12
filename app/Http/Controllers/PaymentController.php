@@ -47,10 +47,11 @@ class PaymentController extends Controller
         ]);
         
         $user = Auth::user();
+        $userId = $user ? ($user->id_utilisateur ?? $user->id) : null;
         
         // Créer un enregistrement de paiement
         $payment = Payment::create([
-            'user_id' => $user ? ($user->id_utilisateur ?? $user->id) : null,
+            'user_id' => $userId,
             'reference' => 'CULT-' . date('YmdHis') . '-' . strtoupper(Str::random(6)),
             'amount' => $request->amount,
             'currency' => $request->payment_provider === 'stripe' ? 'USD' : 'XOF',
@@ -58,10 +59,10 @@ class PaymentController extends Controller
             'payment_method' => $request->payment_method,
             'description' => "Abonnement {$request->plan_type} - Culture Bénin",
             'customer_info' => [
-                'name' => $user ? ($user->prenom . ' ' . $user->nom) : 'Client',
+                'name' => $user ? trim(($user->prenom ?? '') . ' ' . ($user->nom ?? '')) : 'Client',
                 'email' => $request->email,
                 'phone' => $request->phone,
-                'user_id' => $user ? ($user->id_utilisateur ?? $user->id) : null
+                'user_id' => $userId
             ],
             'metadata' => [
                 'plan_type' => $request->plan_type,
@@ -87,7 +88,7 @@ class PaymentController extends Controller
                 customerEmail: $request->email,
                 metadata: [
                     'payment_reference' => $payment->reference,
-                    'user_id' => $user->id_utilisateur ?? $user->id,
+                    'user_id' => $userId,
                     'plan_type' => $request->plan_type
                 ]
             );
@@ -138,8 +139,8 @@ class PaymentController extends Controller
             callbackUrl: $callbackUrl,
             cancelUrl: $cancelUrl,
             customerData: [
-                    'firstname' => $user->prenom ?? explode(' ', $user->nom)[0] ?? 'User',
-                    'lastname' => $user->nom ?? explode(' ', $user->nom)[1] ?? '',
+                    'firstname' => $user ? ($user->prenom ?? (explode(' ', $user->nom ?? '')[0] ?? 'User')) : 'User',
+                    'lastname' => $user ? ($user->nom ?? (explode(' ', $user->nom ?? '')[1] ?? '')) : '',
                 'email' => $request->email,
                 'phone_number' => $request->phone
             ]
@@ -298,20 +299,24 @@ class PaymentController extends Controller
      */
     private function activatePremiumFeatures($user, $payment)
     {
+        if (!$user) {
+            return;
+        }
+
         // Vérifier si l'utilisateur a les colonnes nécessaires
         $userData = [];
         
         // Ajouter les champs premium si la table les supporte
-        if (Schema::hasColumn('utilisateur', 'is_premium')) {
+        if (Schema::hasColumn('utilisateurs', 'is_premium')) {
             $userData['is_premium'] = true;
         }
-        if (Schema::hasColumn('utilisateur', 'premium_until')) {
+        if (Schema::hasColumn('utilisateurs', 'premium_until')) {
             $userData['premium_until'] = now()->addMonth();
         }
-        if (Schema::hasColumn('utilisateur', 'last_payment_id')) {
+        if (Schema::hasColumn('utilisateurs', 'last_payment_id')) {
             $userData['last_payment_id'] = $payment->id;
         }
-        if (Schema::hasColumn('utilisateur', 'plan_type')) {
+        if (Schema::hasColumn('utilisateurs', 'plan_type')) {
             $userData['plan_type'] = $payment->metadata['plan_type'] ?? 'premium';
         }
         
@@ -336,7 +341,10 @@ class PaymentController extends Controller
      */
     public function history()
     {
-        $payments = Payment::where('user_id', Auth::id())
+        $user = Auth::user();
+        $userId = $user ? ($user->id_utilisateur ?? $user->id) : null;
+
+        $payments = Payment::where('user_id', $userId)
             ->orderBy('created_at', 'desc')
             ->paginate(10);
             

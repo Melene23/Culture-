@@ -9,7 +9,7 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    protected $table = 'utilisateur';  // ta table
+    protected $table = 'utilisateurs';  // ta table
 
     protected $primaryKey = 'id_utilisateur'; // ta clé primaire
 
@@ -42,5 +42,15 @@ class User extends Authenticatable
     public function getAuthPassword()
     {
         return $this->mot_de_passe; // Breeze utilise "password" → toi c'est mot_de_passe
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'id_role');
+    }
+
+    public function hasRole($role)
+    {
+        return $this->role && $this->role->nom === $role;
     }
 }

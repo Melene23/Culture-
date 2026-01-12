@@ -13,25 +13,34 @@ class RegionSeeder extends Seeder
      */
     public function run(): void
     {
-        Region::firstOrCreate(
-            ['nom_region' => 'Île-de-France'],
-            ['description' => 'Région', 'localisation' => 'France', 'superficie' => '0', 'population' => '0']
-        );
-        Region::firstOrCreate(
-            ['nom_region' => 'Provence-Alpes-Côte d\'Azur'],
-            ['description' => 'Région', 'localisation' => 'France', 'superficie' => '0', 'population' => '0']
-        );
-        Region::firstOrCreate(
-            ['nom_region' => 'Auvergne-Rhône-Alpes'],
-            ['description' => 'Région', 'localisation' => 'France', 'superficie' => '0', 'population' => '0']
-        );
-        Region::firstOrCreate(
-            ['nom_region' => 'Nouvelle-Aquitaine'],
-            ['description' => 'Région', 'localisation' => 'France', 'superficie' => '0', 'population' => '0']
-        );
-        Region::firstOrCreate(
-            ['nom_region' => 'Occitanie'],
-            ['description' => 'Région', 'localisation' => 'France', 'superficie' => '0', 'population' => '0']
-        );
+        Region::whereIn('nom_region', [
+            'Île-de-France',
+            'Provence-Alpes-Côte d\'Azur',
+            'Auvergne-Rhône-Alpes',
+            'Nouvelle-Aquitaine',
+            'Occitanie',
+        ])->delete();
+
+        $regions = [
+            'Alibori',
+            'Atacora',
+            'Atlantique',
+            'Borgou',
+            'Collines',
+            'Couffo',
+            'Donga',
+            'Littoral',
+            'Mono',
+            'Ouémé',
+            'Plateau',
+            'Zou',
+        ];
+
+        foreach ($regions as $nom) {
+            Region::firstOrCreate(
+                ['nom_region' => $nom],
+                ['description' => 'Département', 'localisation' => 'Bénin', 'superficie' => '0', 'population' => '0']
+            );
+        }
     }
 }
